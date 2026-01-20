@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="manifest" href="manifest.json">
+  <title>Розклад</title>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <a class="icon-btn" href="#" title="На головну">🏠</a>
+      <button class="icon-btn" id="btnRefresh" type="button" title="Оновити">↻</button>
+
+      <!-- заголовок групи будемо міняти з JS -->
+      <h1 class="group-title" id="groupTitle">ФБС25/Б</h1>
+
+      <button class="btn exam-btn" type="button">Екзамени</button>
+    </div>
+
+    <div class="topbar-right">
+      <!-- 2) ПІДГРУПИ (видимі тільки коли обрана ФБС) -->
+      <div class="pill-group" id="subgroupSwitch">
+        <button class="pill active" type="button" data-subgroup="1">I підгрупа</button>
+        <button class="pill" type="button" data-subgroup="2">II підгрупа</button>
+      </div>
+
+      <!-- 1) ПЕРЕМИКАННЯ "ВІДДІЛЕННЯ" = ПЕРЕМИКАННЯ ГРУПИ (ФБС ↔ ФБА) -->
+      <div class="pill-group" id="groupSwitch">
+        <button class="pill active" type="button" data-group="fbs25b">ФБС25/Б</button>
+        <button class="pill" type="button" data-group="fba25b">ФБА25/Б</button>
+      </div>
+    </div>
+
+    <!-- Випадаючі списки викладачів -->
+    <div class="teacher-selects-row">
+      <div class="teacher-select-wrapper">
+        <label for="englishTeacherSelect" class="teacher-select-label">Англійська мова:</label>
+        <select id="englishTeacherSelect" class="teacher-select">
+          <option value="">Не вибрано</option>
+          <option value="english_gavrylyshyn">Гаврилишин І.</option>
+          <option value="english_sarabin">Сарабін О.</option>
+          <option value="english_rudeyko">Рудейко Н.</option>
+        </select>
+      </div>
+      <div class="teacher-select-wrapper">
+        <label for="latinTeacherSelect" class="teacher-select-label">Латинська мова:</label>
+        <select id="latinTeacherSelect" class="teacher-select">
+          <option value="">Не вибрано</option>
+          <option value="latin_vynar">Винар С.</option>
+          <option value="latin_lemik">Лемик І.</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Мобільна версія (картки) -->
+    <section class="mobile-schedule" id="mobileSchedule">
+      <div class="mobile-days-wrapper">
+        <!-- Дні будуть створюватись динамічно через JS -->
+      </div>
+    </section>
+
+    <!-- Десктопна версія (таблиця) -->
+    <section class="card desktop-schedule">
+      <div class="table-wrap">
+        <table class="schedule">
+          <thead>
+            <tr>
+              <th class="time-col"></th>
+              <th>Понеділок</th>
+              <th>Вівторок</th>
+              <th>Середа</th>
+              <th>Четвер</th>
+              <th>П'ятниця</th>
+
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- ПАРА 1 -->
+            <tr>
+              <th class="time-cell">
+                <span class="pair">1</span>
+                <span class="start">8:30</span>
+                <span class="end">9:50</span>
+              </th>
+
+              <td data-day="mon" data-pair="1"></td>
+              <td data-day="tue" data-pair="1"></td>
+              <td data-day="wed" data-pair="1"></td>
+              <td data-day="thu" data-pair="1"></td>
+              <td data-day="fri" data-pair="1"></td>
+            </tr>
+
+            <!-- ПАРА 2 -->
+            <tr>
+              <th class="time-cell">
+                <span class="pair">2</span>
+                <span class="start">10:10</span>
+                <span class="end">11:30</span>
+              </th>
+
+              <td data-day="mon" data-pair="2"></td>
+              <td data-day="tue" data-pair="2"></td>
+              <td data-day="wed" data-pair="2"></td>
+              <td data-day="thu" data-pair="2"></td>
+              <td data-day="fri" data-pair="2"></td>
+            </tr>
+
+            <!-- ПАРА 3 -->
+            <tr>
+              <th class="time-cell">
+                <span class="pair">3</span>
+                <span class="start">11:50</span>
+                <span class="end">13:10</span>
+              </th>
+
+              <td data-day="mon" data-pair="3"></td>
+              <td data-day="tue" data-pair="3"></td>
+              <td data-day="wed" data-pair="3"></td>
+              <td data-day="thu" data-pair="3"></td>
+              <td data-day="fri" data-pair="3"></td>
+            </tr>
+
+
+
+            <!-- Рядок без номера пари -->
+            <tr>
+              <th class="time-cell">
+                <span class="start">14:15</span>
+                <span class="end">15:35</span>
+              </th>
+
+              <td data-day="mon" data-pair="break1"></td>
+              <td data-day="tue" data-pair="break1"></td>
+              <td data-day="wed" data-pair="break1"></td>
+              <td data-day="thu" data-pair="break1"></td>
+              <td data-day="fri" data-pair="break1"></td>
+            </tr>
+
+            <!-- ПАРА 4 -->
+            <tr>
+              <th class="time-cell">
+                <span class="pair">4</span>
+                <span class="start">15:45</span>
+                <span class="end">17:05</span>
+              </th>
+
+              <td data-day="mon" data-pair="4"></td>
+              <td data-day="tue" data-pair="4"></td>
+              <td data-day="wed" data-pair="4"></td>
+              <td data-day="thu" data-pair="4"></td>
+              <td data-day="fri" data-pair="4"></td>
+            </tr>
+
+          
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
