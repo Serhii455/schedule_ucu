@@ -1,22 +1,34 @@
-const CACHE_NAME = 'uku-schedule-v1';
+const BASE = "/schedule/"; // <- твій repo
+const CACHE = "schedule-v1";
+
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/styles/styles.css',
-  '/js/app.js',
-  '/data/schedule.js'
+  `${BASE}`,
+  `${BASE}index.html`,
+  `${BASE}404.html`,
+  `${BASE}styles/styles.css`,
+  `${BASE}js/app.js`,
+  `${BASE}data/schedule.js`,
+  `${BASE}manifest.webmanifest`
 ];
 
-// Встановлення та кешування ресурсів
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+  self.skipWaiting();
 });
 
-// Робота в офлайні
-self.addEventListener('fetch', (e) => {
+self.addEventListener("activate", (e) => {
+  e.waitUntil(self.clients.claim());
+});
+
+self.addEventListener("fetch", (e) => {
   e.respondWith(
-    caches.match(e.request).then((response) => response || fetch(e.request))
+    fetch(e.request).catch(async () => {
+      // для навігації — повертаємо index.html
+      if (e.request.mode === "navigate") {
+        return caches.match(`${BASE}index.html`);
+      }
+      // для ресурсів — пробуємо з кешу
+      return caches.match(new URL(e.request.url).pathname);
+    })
   );
 });
