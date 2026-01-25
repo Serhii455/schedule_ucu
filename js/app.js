@@ -152,16 +152,29 @@ function setActive(container, selector) {
 
 function getCurrentData() {
   const g = SCHEDULE[state.group];
-  if (!g) return {};
+  if (!g) {
+    console.warn(`Група ${state.group} не знайдена в розкладі`);
+    return {};
+  }
 
   let data = {};
   
   // ФБС має підгрупи
   if (state.group === "fbs25b") {
-    data = JSON.parse(JSON.stringify(g?.[state.subgroup]?.[state.week] ?? {}));
+    const subgroupData = g?.[state.subgroup];
+    if (!subgroupData) {
+      console.warn(`Підгрупа ${state.subgroup} не знайдена для ${state.group}`);
+      return {};
+    }
+    data = JSON.parse(JSON.stringify(subgroupData?.[state.week] ?? {}));
   } else {
     // ФБА без підгруп
-    data = JSON.parse(JSON.stringify(g?.[state.week] ?? {}));
+    const weekData = g?.[state.week];
+    if (!weekData) {
+      console.warn(`Тиждень ${state.week} не знайдено для ${state.group}`);
+      return {};
+    }
+    data = JSON.parse(JSON.stringify(weekData ?? {}));
   }
 
   // Замінюємо викладачів та аудиторії, якщо вибрано
@@ -247,6 +260,13 @@ function renderMobileSchedule() {
 
   mobileSchedule.innerHTML = "";
 
+  // Визначаємо сьогоднішній день
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 = неділя, 1 = понеділок, ..., 5 = п'ятниця
+  const dayMap = { 1: "mon", 2: "tue", 3: "wed", 4: "thu", 5: "fri" };
+  const todayDayKey = dayMap[dayOfWeek];
+  let todayElement = null;
+
   // Створюємо картки для кожного дня
   daysOrder.forEach(day => {
     const dayData = data[day];
@@ -254,6 +274,12 @@ function renderMobileSchedule() {
 
     const dayDiv = document.createElement("div");
     dayDiv.className = "mobile-day";
+    
+    // Позначаємо сьогоднішній день
+    if (day === todayDayKey) {
+      dayDiv.classList.add("mobile-day-today");
+      todayElement = dayDiv;
+    }
 
     const dayTitle = document.createElement("h2");
     dayTitle.className = "mobile-day-title";
@@ -299,6 +325,13 @@ function renderMobileSchedule() {
     dayDiv.appendChild(lessonsDiv);
     mobileSchedule.appendChild(dayDiv);
   });
+
+  // Прокручуємо до сьогоднішнього дня
+  if (todayElement) {
+    setTimeout(() => {
+      todayElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
 }
 
 function renderSchedule() {

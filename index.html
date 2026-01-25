@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<base href="/schedule_ucu/">
-
-  <link rel="stylesheet" href="styles/styles.css" />
-  <title>Розклад</title>
+  <meta name="theme-color" content="#8b0038" />
+  
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles/styles.css"/>
+  <title>Розклад</title>  
 </head>
 
 <body>
@@ -167,5 +167,15 @@
   </main>
 
   <script type="module" src="js/app.js"></script>
+  <script>
+    // Реєстрація Service Worker для PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>
