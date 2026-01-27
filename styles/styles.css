@@ -3,31 +3,31 @@
 /* ===== CSS Variables (кольори) ===== */
 :root {
   /* Основні кольори фону */
-  --bg-gradient-start: #8b0038;
-  --bg-gradient-mid1: #a00042;
-  --bg-gradient-mid2: #8b0038;
-  --bg-gradient-end: #5a0024;
+  --bg-gradient-start: #1D3461;
+  --bg-gradient-mid1: #1E3E70;
+  --bg-gradient-mid2: #1F487E;
+  --bg-gradient-end: #376996;
 
   /* Кольори для кнопок та елементів */
-  --pill-group-bg: rgba(139, 0, 56, 0.4);
-  --pill-group-border: rgba(255, 255, 255, 0.15);
-  --pill-active-gradient-start: #ff6b9d;
-  --pill-active-gradient-end: #ff8fab;
-  --pill-active-shadow: rgba(255, 107, 157, 0.4);
-  --pill-hover-bg: rgba(255, 255, 255, 0.15);
+  --pill-group-bg: rgba(130, 156, 188, 0.18);
+  --pill-group-border: rgba(255, 255, 255, 0.12);
+  --pill-active-gradient-start: #6290C8;
+  --pill-active-gradient-end: #829CBC;
+  --pill-active-shadow: rgba(98, 144, 200, 0.45);
+  --pill-hover-bg: rgba(130, 156, 188, 0.28);
 
   /* Кольори для кнопок та іконок */
   --icon-btn-bg: rgba(255, 255, 255, 0.14);
-  --icon-btn-hover: rgba(255, 255, 255, 0.20);
-  --exam-btn-hover: rgba(255, 255, 255, 0.25);
-  --exam-btn-shadow: rgba(0, 0, 0, 0.2);
+  --icon-btn-hover: rgba(255, 255, 255, 0.22);
+  --exam-btn-hover: rgba(255, 255, 255, 0.35);
+  --exam-btn-shadow: rgba(0, 0, 0, 0.25);
 
   /* Кольори для уроків */
-  --lesson-bg-start: rgba(0, 0, 0, 0.25);
-  --lesson-bg-end: rgba(0, 0, 0, 0.15);
-  --lesson-bar-lecture: #4cc3ff;
-  --lesson-bar-lab: #b57cff;
-  --lesson-bar-practice: #4cff9a;
+  --lesson-bg-start: rgba(14, 39, 90, 0.55);
+  --lesson-bg-end: rgba(4, 35, 86, 0.35);
+  --lesson-bar-lecture: #829CBC;
+  --lesson-bar-lab: #376996;
+  --lesson-bar-practice: #376996;
 
   /* Загальні налаштування */
   --text-color: #fff;

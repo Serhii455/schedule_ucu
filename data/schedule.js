@@ -47,8 +47,8 @@ export const SCHEDULE = {
           },
           3: {
             subject: "Вступ до богословських наук (богослов'я)",
-            teacher: "Басюк Т.М.",
-            room: "+PI-21сп525 IV н.к.",
+            teacher: "Жуковський В.",
+            room: "210 ауд.",
             type: "lecture",
           },
         },
