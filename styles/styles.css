@@ -25,9 +25,9 @@
   /* Кольори для уроків */
   --lesson-bg-start: rgba(14, 39, 90, 0.55);
   --lesson-bg-end: rgba(4, 35, 86, 0.35);
-  --lesson-bar-lecture: #829CBC;
-  --lesson-bar-lab: #376996;
-  --lesson-bar-practice: #376996;
+  --lesson-bar-lecture: #61b3ff;
+  --lesson-bar-lab: #fffb00;
+  --lesson-bar-practice: #963737;
 
   /* Загальні налаштування */
   --text-color: #fff;

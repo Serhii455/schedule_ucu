@@ -42,7 +42,7 @@ const timeSlots = {
   2: { start: "10:10", end: "11:30" },
   3: { start: "11:50", end: "13:10" },
   "break1": { start: "14:15", end: "15:35" },
-  4: { start: "15:45", end: "17:05" }
+  // 4: { start: "15:45", end: "17:05" }
 };
 
 // Назви днів тижня
@@ -89,14 +89,14 @@ const LIT_SPIV = {
   teacher: "Юсипів с. Т.",
   // room свідомо не заповнюємо – аудиторію можна вказати в базовому розкладі
   room: "",
-  type: "lab",
+  type: "practice",
 };
 
 const CERK_SLOV = {
   subject: "Церковнослов'янська мова",
   teacher: "Лазор О.",
   room: "204ЛДС",
-  type: "lab",
+  type: "practice",
 };
 
 function applyMondayRotation(data) {
@@ -115,31 +115,63 @@ function applyMondayRotation(data) {
     else delete monPairs[key];
   };
 
+  function applyEnglishTeacherLogic(data) {
+  // Застосовуємо логіку ТІЛЬКИ для ФБС та якщо вибрано викладача
+  if (state.group !== "fbs25b" || !state.englishTeacher) return data;
+
+  // Тут ви описуєте в які дні і на яких парах відбуваються зміни
+  // Наприклад, працюємо з вівторком (tue)
+  if (!data.tue) data.tue = {}; 
+  const tuePairs = data.tue;
+
+  // Логіка для вівторка: якщо обрано Сарабін або Рудейко — Церк.-слов на 2-й парі, інакше на 1-й
+  const teachersSecondPair = ["english_sarabin", "english_rudeyko"];
+  if (teachersSecondPair.includes(state.englishTeacher)) {
+    // розміщуємо на 2-й парі
+    tuePairs["2"] = { ...CERK_SLOV };
+    // видаляємо 1-шу пару тільки якщо там була Церк.-слов
+    if (tuePairs["2"] && tuePairs["2"].subject === CERK_SLOV.subject) {
+      delete tuePairs["1"];
+    }
+  } else {
+    // розміщуємо на 1-й парі
+    tuePairs["1"] = { ...CERK_SLOV };
+    // видаляємо 2-гу пару тільки якщо там була Церк.-слов
+    if (tuePairs["2"] && tuePairs["2"].subject === CERK_SLOV.subject) {
+      delete tuePairs["2"];
+    }
+  }
+
   if (evenWeek) {
     // Week 0: І підгрупа має 3 пару Літ. спів, break1 Церк.-слов; ІІ підгрупа має break1 Літ. спів і 4 пару Церк.-слов
     if (state.subgroup === "subgroup1") {
       set("3", { ...LIT_SPIV });
-      set("break1", { ...CERK_SLOV });
+      set("break1", null);
       set("4", null);
     } else {
       set("3", null);
       set("break1", { ...LIT_SPIV });
-      set("4", { ...CERK_SLOV });
+      set("4", null);
     }
   } else {
     // Next week: навпаки
     if (state.subgroup === "subgroup1") {
       set("3", null);
       set("break1", { ...LIT_SPIV });
-      set("4", { ...CERK_SLOV });
+      set("4", null);
     } else {
       set("3", { ...LIT_SPIV });
-      set("break1", { ...CERK_SLOV });
+      set("break1", null);
       set("4", null);
     }
   }
 
   data.mon = monPairs;
+  return data;
+  }
+
+  // Викликаємо допоміжні логіки ротації (за потреби можна додати інші)
+  data = applyEnglishTeacherLogic(data);
   return data;
 }
 
@@ -204,7 +236,7 @@ function getCurrentData() {
 
   // Автоматична ротація понеділка (лише для ФБС)
   return applyMondayRotation(data);
-}
+};
 
 function updateUI() {
   // заголовок з анімацією
@@ -222,6 +254,79 @@ function updateUI() {
       groupTitle.style.opacity = "1";
       groupTitle.style.transform = "translateY(0)";
     }, 100);
+
+    // Додаємо/оновлюємо інформацію про розробника та дату останньої зміни
+    // Елемент створюється один раз і позиціонується по центру знизу екрану
+    (function ensureDevInfo() {
+      const DEV_ID = 'devInfo';
+      let el = document.getElementById(DEV_ID);
+     if (!el) { // якщо елемент ще не існує (щоб не створювати дублікати)
+    
+    el = document.createElement('div'); // створюємо новий <div>
+    
+    el.id = DEV_ID; // задаємо унікальний id елемента (щоб можна було знайти його пізніше)
+    
+    el.className = 'dev-info'; // додаємо CSS-клас для стилізації через CSS (якщо потрібно)
+
+    // --- СТИЛІ ДЛЯ ВІДОБРАЖЕННЯ ---
+    
+    // el.style.position = 'fixed'; 
+    // фіксує елемент відносно вікна браузера (він не рухається при скролі)
+
+    el.style.left = '36px'; 
+    // відступ зліва 36px
+
+    el.style.transform = 'none'; 
+    // скидає будь-які трансформації (наприклад translate)
+
+    // el.style.bottom = '48px'; 
+    // відступ від низу 48px → елемент буде внизу зліва
+
+    el.style.padding = '4px 8px'; 
+    // внутрішні відступи: 4px зверху/знизу, 8px зліва/справа
+
+    el.style.background = 'rgba(8, 17, 99, 0.18)'; 
+    // напівпрозорий чорний фон
+
+    el.style.borderRadius = '6px'; 
+    // закруглення кутів
+
+    el.style.fontSize = '12px'; 
+    // розмір тексту
+
+    el.style.color = '#fff'; 
+    // білий колір тексту
+
+    // el.style.zIndex = '9999'; 
+    // робить елемент "поверх" майже всіх інших елементів
+
+    el.style.pointerEvents = 'none'; 
+    // елемент не перехоплює кліки (можна клікати крізь нього)
+
+    el.style.maxWidth = '400px'; 
+    // максимальна ширина (щоб не розтягувався занадто)
+
+    el.style.whiteSpace = 'nowrap'; 
+    // забороняє перенос тексту на новий рядок
+
+    // el.style.overflow = 'hidden'; 
+    // приховує текст, який виходить за межі блоку
+
+    el.style.textOverflow = 'ellipsis'; 
+    // додає "..." якщо текст не вміщається
+
+    // --- ДОДАЄМО В DOM ---
+    
+    document.body.appendChild(el); 
+    // вставляємо елемент в кінець <body>, щоб він з'явився на сторінці
+}
+
+      // Виводимо ім'я розробника і дату останньої зміни
+      const developerName = 'Сергій Бджіл';
+      const lastModifiedRaw = document.lastModified || new Date().toString();
+      const lastModified = new Date(lastModifiedRaw);
+      el.textContent = `Розробник: ${developerName} — останнє оновлення: ${isNaN(lastModified.getTime()) ? lastModifiedRaw : lastModified.toLocaleString()}`;
+    })();
   }
 
   // підгрупи показуємо тільки для ФБС з анімацією
